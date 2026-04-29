@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-
+
+scalable=yes">
+    <title>MEYANPARFUM - Qramla Ətir Satışı | Tam idarə</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-
+
+alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-
+
+icons@1.11.3/font/bootstrap-icons.css">
+    <script 
+
+src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        body { background-color: #0a0a0a !important; font-family: 'Segoe UI', Tahoma, 
+
+Geneva, Verdana, sans-serif; color: #e6d5a8; }
+        .navbar { background: #000000 !important; border-bottom: 2px solid #d4af37; }
+        .navbar-brand { color: #d4af37 !important; font-weight: bold; letter-spacing: 2px; 
+
+font-size: 1.8rem; }
+        .navbar-brand i { color: #d4af37; }
+        .nav-link { color: #e6d5a8 !important; }
+        .nav-link:hover, .nav-link.active { color: #d4af37 !important; border-bottom: 1px 
+
+solid #d4af37; }
+        .daily-sale-badge { background: #d4af37; color: #000; padding: 5px 12px; border-
+
+radius: 30px; font-weight: bold; font-size: 0.9rem; margin-left: 10px; }
+        /* Kiçik kartlar, mətn ortada */
+        .product-card { background: #111111 !important; border: 1px solid #d4af37; border-
+
+radius: 20px; transition: 0.2s; overflow: hidden; }
+        .product-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba
+
+(212, 175, 55, 0.2); }
+        .product-img { width: 100%; height: 150px; object-fit: cover; background: #1c1c1c; 
+
+border-bottom: 1px solid #d4af37; }
+        .card-body { padding: 0.8rem !important; text-align: center; }
+        .card-title { color: #d4af37; font-size: 1.1rem; margin-bottom: 0.3rem; }
+        .stock-badge { background: #2a2a2a; color: #d4af37; border-radius: 30px; padding: 
+
+3px 10px; font-size: 0.75rem; }
+        .btn-sm { padding: 0.2rem 0.5rem; font-size: 0.7rem; }
+        .sell-section, .income-section, .card, .report-card { background: #111111 !
+
+important; border: 1px solid #d4af37; border-radius: 20px; }
+        .btn-primary-custom { background: #d4af37; border: none; color: #000; font-weight: 
+
+bold; }
+        .btn-primary-custom:hover { background: #c5a026; }
+        .btn-warning, .btn-success { background: #d4af37; border-color: #b38f2c; color: 
+
+#000; font-weight: bold; }
+        .modal-content { background: #121212; border: 1px solid #d4af37; color: #e6d5a8; }
+        .form-control, .form-select { background-color: #1e1e1e; border: 1px solid #d4af37; 
+
+color: #f0e6c5; }
+        .list-group-item { background-color: #181818; border-color: #3a3a2a; color: 
+
+#e2d5b6; }
+        .report-number { font-size: 2rem; font-weight: bold; color: #d4af37; }
+        /* Mobil: bir cərgədə 1 kart, lakin kartlar balaca görünür */
+        @media (max-width: 768px) {
+            .navbar-brand { font-size: 1.2rem; }
+            .daily-sale-badge { font-size: 0.7rem; }
+            .product-img { height: 130px; }
+            .card-title { font-size: 1rem; }
+        }
+        .warning-border { border-left: 5px solid #ffc107; }
+        footer a { color: #d4af37; text-decoration: none; transition: 0.2s; }
+        footer a:hover { color: #f5cb5c; text-decoration: underline; }
+        /* Borclar cədvəli mobil üçün üfüqi sürüşdürmə */
+        .debts-table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .debts-table-wrapper table { min-width: 600px; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg sticky-top">
+    <div class="container">
+        <a class="navbar-brand" href="#"><i class="bi bi-gem"></i> MEYANPARFUM</a>
+        <div class="ms-auto d-flex align-items-center">
+            <span class="daily-sale-badge"><i class="bi bi-cash-stack"></i> Bugün: <span 
+
+id="dailySaleNav">0</span> AZN</span>
+            <button class="navbar-toggler ms-2" type="button" data-bs-toggle="collapse" 
+
+data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
+            </button>
+        </div>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link active" data-tab="products-tab" 
+
+href="#">📦 Məhsullar</a></li>
+                <li class="nav-item"><a class="nav-link" data-tab="sell-tab" href="#">💰 
+
+Satış</a></li>
+                <li class="nav-item"><a class="nav-link" data-tab="income-tab" href="#">📥 
+
+Mədaxil + xərc</a></li>
+                <li class="nav-item"><a class="nav-link" data-tab="reports-tab" href="#">📊 
+
+Hesabatlar</a></li>
+                <li class="nav-item"><a class="nav-link" data-tab="debts-tab" href="#">📋 
+
+Borclar (Nisyə)</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <div class="tab-content" id="mainTabContent">
+        <div class="tab-pane fade show active" id="products-tab">
+            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
+                <h3 style="color:#d4af37;"><i class="bi bi-box-seam"></i> Ətirlər (Satış 
+
+reytinqinə görə)</h3>
+                <button class="btn btn-success" data-bs-toggle="modal" data-bs-
+
+target="#addProductModal"><i class="bi bi-plus-circle"></i> Yeni ətir</button>
+            </div>
+            <div id="productsList" class="row g-3">
+                <!-- Məhsullar reytinq sırası ilə gələcək -->
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="sell-tab">
+            <div class="sell-section p-4">
+                <h4><i class="bi bi-cart-check"></i> Qramla satış (Nisyə ola bilər)</h4>
+                <div class="row g-3">
+                    <div class="col-md-5"><label>Ətir</label><select id="sellProductSelect" 
+
+class="form-select"></select></div>
+                    <div class="col-md-3"><label>Qram (qr)</label><select id="sellGrams" 
+
+class="form-select"><option value="5">5 qr</option><option value="10">10 qr</option><option 
+
+value="20">20 qr</option><option value="30">30 qr</option><option value="50">50 
+
+qr</option><option value="100">100 qr</option></select></div>
+                    <div class="col-md-2"><label><input type="checkbox" 
+
+id="isDebtCheckbox"> Nisyə (Borc)</label></div>
+                    <div class="col-md-2" id="paymentDateDiv" 
+
+style="display:none;"><label>Ödəniş tarixi</label><input type="date" id="debtDueDate" 
+
+class="form-control"></div>
+                </div>
+                <button id="executeSellBtn" class="btn btn-primary-custom mt-3 w-100">Satış 
+
+et</button>
+                <div id="sellMessage" class="mt-3 alert d-none"></div>
+                <hr><h5>Satış tarixçəsi (son 10)</h5><div id="recentSalesList" 
+
+class="small"></div>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="income-tab">
+            <div class="income-section p-4">
+                <h4><i class="bi bi-arrow-down-circle"></i> Mal mədaxili (xərc daxil et)
+
+</h4>
+                <div class="row g-3">
+                    <div class="col-md-4"><label>Məhsul</label><select 
+
+id="incomeProductSelect" class="form-select"></select></div>
+                    <div class="col-md-3"><label>Əlavə qram (qr)</label><input 
+
+type="number" id="incomeGrams" class="form-control" min="1" value="50"></div>
+                    <div class="col-md-3"><label>Alış qiyməti (cəmi AZN)</label><input 
+
+type="number" id="incomeCost" class="form-control" step="0.01" placeholder="Xərc 
+
+məbləği"></div>
+                    <div class="col-md-2 align-self-end"><button id="addStockBtn" 
+
+class="btn btn-warning w-100">Stoka əlavə et</button></div>
+                </div>
+                <div id="incomeMessage" class="mt-3 alert d-none"></div>
+                <hr><h5>Mədaxil əməliyyatları (xərclər)</h5><div id="incomeLogList" 
+
+class="small"></div>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="reports-tab">
+            <div class="row mb-3"><div class="col-md-8"><h4 style="color:#d4af37;"><i 
+
+class="bi bi-graph-up"></i> Maliyyə hesabatları</h4></div>
+            <div class="col-md-4"><select id="reportPeriod" class="form-select"><option 
+
+value="day">Gündəlik</option><option value="week">Həftəlik</option><option 
+
+value="month">Aylıq</option></select></div></div>
+            <div class="row">
+                <div class="col-md-4 mb-3"><div class="report-card text-center p-2"><div 
+
+class="report-number" id="totalIncomeReport">0</div><div>Ümumi satış gəliri (ödənilmiş)
+
+</div></div></div>
+                <div class="col-md-4 mb-3"><div class="report-card text-center p-2"><div 
+
+class="report-number" id="totalExpenseReport">0</div><div>Mal alış 
+
+xərcləri</div></div></div>
+                <div class="col-md-4 mb-3"><div class="report-card text-center p-2"><div 
+
+class="report-number" id="netProfitReport">0</div><div>Xalis mənfəət</div></div></div>
+            </div>
+            <div class="card p-3 mt-2"><canvas id="salesChart" width="400" 
+
+height="200"></canvas></div>
+            <div class="card mt-4 p-3"><h5>Dövr üzrə əməliyyatlar</h5><div 
+
+id="reportTableContainer" class="table-responsive"></div></div>
+        </div>
+
+        <div class="tab-pane fade" id="debts-tab">
+            <div class="card p-3">
+                <h4><i class="bi bi-credit-card"></i> Nisyə satışlar (alınmamış ödənişlər)
+
+</h4>
+                <div class="debts-table-wrapper mt-3">
+                    <div id="debtsList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="text-center mt-5 pt-3 pb-3 border-top border-warning">
+    <div class="container">
+        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-
+
+center gap-2">
+            <div class="small">© 2025 MEYANPARFUM — Qramla ətir satışı</div>
+            <div class="d-flex align-items-center gap-3">
+                <span class="small">by <strong>s_akhundoff</strong></span>
+                <a href="https://www.instagram.com/s_akhundoff/" target="_blank" 
+
+rel="noopener noreferrer" class="text-decoration-none">
+                    <i class="bi bi-instagram fs-5"></i> <span class="d-none d-sm-
+
+inline">Instagram</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Modal: Yeni məhsul -->
+<div class="modal fade" id="addProductModal" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-plus-circle"></i> Yeni ətir əlavə 
+
+et</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addProductForm" novalidate>
+                    <div class="mb-3">
+                        <label class="form-label">Ətir adı *</label>
+                        <input type="text" id="prodName" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">1 qr qiyməti (AZN) *</label>
+                        <input type="number" id="prodPriceGram" class="form-control" 
+
+step="0.01" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Başlanğıc stok (qr)</label>
+                        <input type="number" id="prodStock" class="form-control" value="0" 
+
+min="0">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Şəkil (JPG/PNG)</label>
+                        <input type="file" id="prodImage" class="form-control" 
+
+accept="image/*">
+                        <div class="form-text">Şəkil seçilməsə, default qızıl şəkil istifadə 
+
+olunur.</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary-custom w-100"><i class="bi 
+
+bi-save"></i> Əlavə et</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Nisyə üçün müştəri məlumatları -->
+<div class="modal fade" id="customerInfoModal" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-person-lines-fill"></i> Müştəri 
+
+məlumatları (Nisyə)</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label">Ad, Soyad</label>
+                    <input type="text" id="customerFullName" class="form-control" 
+
+placeholder="Məs: Aysel Qasimova" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Telefon nömrəsi</label>
+                    <input type="tel" id="customerPhone" class="form-control" 
+
+placeholder="+994 XX XXX XX XX" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Ödəniş tarixi</label>
+                    <input type="date" id="modalDueDate" class="form-control" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-
+
+dismiss="modal">Ləğv et</button>
+                <button type="button" id="confirmDebtSaleBtn" class="btn btn-primary-
+
+custom">Təsdiq et & Sat</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-
+
+alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // ======================== STORAGE ========================
+    const STORAGE = { PRODUCTS: 'meyan_products', SALES: 'meyan_sales', STOCK_INCOMES: 
+
+'meyan_incomes' };
+
+    function getProducts() { return JSON.parse(localStorage.getItem(STORAGE.PRODUCTS)) || 
+
+[]; }
+    function saveProducts(p) { localStorage.setItem(STORAGE.PRODUCTS, JSON.stringify(p)); }
+    function getSales() { return JSON.parse(localStorage.getItem(STORAGE.SALES)) || []; }
+    function saveSales(s) { localStorage.setItem(STORAGE.SALES, JSON.stringify(s)); }
+    function getIncomes() { return JSON.parse(localStorage.getItem(STORAGE.STOCK_INCOMES)) 
+
+|| []; }
+    function saveIncomes(i) { localStorage.setItem(STORAGE.STOCK_INCOMES, JSON.stringify
+
+(i)); }
+
+    function generateId() { return Date.now() + Math.floor(Math.random() * 1000000); }
+
+    function initData() {
+        if(!localStorage.getItem(STORAGE.PRODUCTS)) {
+            saveProducts([
+                { id: generateId(), name: "Rose Noir", pricePerGram: 1.2, stockGrams: 500, 
+
+imageBase64: "" },
+                { id: generateId(), name: "Oud Royal", pricePerGram: 2.5, stockGrams: 320, 
+
+imageBase64: "" }
+            ]);
+        }
+        if(!localStorage.getItem(STORAGE.SALES)) saveSales([]);
+        if(!localStorage.getItem(STORAGE.STOCK_INCOMES)) saveIncomes([]);
+        syncStock();
+    }
+
+    function syncStock() {
+        let prods = getProducts();
+        const incomes = getIncomes();
+        const sales = getSales();
+        prods.forEach(p => p.stockGrams = 0);
+        incomes.forEach(inc => { let p = prods.find(pr => pr.id === inc.productId); if(p) 
+
+p.stockGrams += inc.gramsAdded; });
+        sales.forEach(sale => { if(!sale.isDebt || sale.paid) { let p = prods.find(pr => 
+
+pr.id === sale.productId); if(p) p.stockGrams -= sale.gramsSold; } });
+        prods.forEach(p => { if(p.stockGrams < 0) p.stockGrams = 0; });
+        saveProducts(prods);
+    }
+
+    function checkAlertsOnce() {
+        let alerts = [];
+        const prods = getProducts();
+        prods.forEach(p => { if(p.stockGrams < 5 && p.stockGrams >= 0) alerts.push(`⚠️ 
+
+${p.name} stoku ${p.stockGrams} qr (5 qr-dan az!)`); });
+        const sales = getSales();
+        const today = new Date().toISOString().slice(0,10);
+        sales.forEach(s => { if(s.isDebt && !s.paid && s.dueDate === today) alerts.push(`💳 
+
+Ödəniş vaxtı gəldi: ${s.customerName || 'Müştəri'} (${s.customerPhone || ''}) - 
+
+${s.totalPrice} AZN`); });
+        if(alerts.length) alert("MEYANPARFUM BİLDİRİŞLƏRİ:\n" + alerts.join("\n"));
+    }
+
+    function getProductName(pid) { let p = getProducts().find(pr => pr.id === pid); return 
+
+p ? p.name : "?"; }
+    function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, m => ({ 
+
+'&':'&amp;', '<':'&lt;', '>':'&gt;' }[m])); }
+
+    // Reytinq: satılan ümumi qram (bütün satışlar, ödənişli və ya nisyə olsa da)
+    function getSalesRanking() {
+        const sales = getSales();
+        const gramsSoldMap = new Map(); // productId -> total grams sold
+        sales.forEach(s => {
+            let current = gramsSoldMap.get(s.productId) || 0;
+            gramsSoldMap.set(s.productId, current + s.gramsSold);
+        });
+        return gramsSoldMap;
+    }
+
+    function renderProducts() {
+        let products = getProducts();
+        if(!products.length) { document.getElementById('productsList').innerHTML = '<div 
+
+class="col-12 text-center">Məhsul yoxdur</div>'; return; }
+        const ranking = getSalesRanking();
+        // Reytinqə görə sırala (azalan)
+        products.sort((a,b) => (ranking.get(b.id) || 0) - (ranking.get(a.id) || 0));
+        const container = document.getElementById('productsList');
+        container.innerHTML = products.map(prod => `
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="product-card h-100 ${prod.stockGrams < 5 ? 'warning-border' : 
+
+''}">
+                    <img src="${prod.imageBase64 || 
+
+'https://placehold.co/400x400/d4af37/111111?text=MEYANPARFUM'}" class="product-img" 
+
+alt="${escapeHtml(prod.name)}">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">${escapeHtml(prod.name)}</h5>
+                        <p class="mb-1"><strong>${prod.pricePerGram} AZN/qr</strong></p>
+                        <p><span class="stock-badge"><i class="bi bi-droplet"></i> Stok: 
+
+${prod.stockGrams} qr</span></p>
+                        <div class="d-flex justify-content-center gap-2">
+                            <button class="btn btn-sm btn-outline-secondary" 
+
+onclick="editProductPrompt(${prod.id})"><i class="bi bi-pencil"></i> Redaktə</button>
+                            <button class="btn btn-sm btn-outline-danger" 
+
+onclick="deleteProductById(${prod.id})"><i class="bi bi-trash"></i> Sil</button>
+                        </div>
+                    </div>
+                </div>
+            </div>`).join('');
+    }
+
+    window.editProductPrompt = (id) => {
+        let p = getProducts().find(x => x.id === id);
+        if(!p) return;
+        let n = prompt('Yeni ad', p.name);
+        if(n && n.trim()) p.name = n.trim();
+        let pr = prompt('1qr qiyməti (AZN)', p.pricePerGram);
+        if(pr !== null && !isNaN(parseFloat(pr))) p.pricePerGram = parseFloat(pr);
+        saveProducts(getProducts());
+        renderProducts();
+        populateSelects();
+    };
+    window.deleteProductById = (id) => {
+        if(confirm('Bu ətri silmək istədiyinizdən əminsiniz?')) {
+            let prods = getProducts().filter(p => p.id !== id);
+            saveProducts(prods);
+            renderProducts();
+            populateSelects();
+        }
+    };
+
+    function populateSelects() {
+        let prods = getProducts();
+        let html = prods.map(p => `<option value="${p.id}">${escapeHtml(p.name)} 
+
+(${p.pricePerGram} AZN/qr, stok:${p.stockGrams} qr)</option>`).join('');
+        document.getElementById('sellProductSelect').innerHTML = html;
+        document.getElementById('incomeProductSelect').innerHTML = html;
+    }
+
+    function renderRecentSales() {
+        let sales = getSales().slice(-10).reverse();
+        let container = document.getElementById('recentSalesList');
+        if(!sales.length){ container.innerHTML='<p>Satış yoxdur</p>'; return; }
+        container.innerHTML = `<ul class="list-group">` + sales.map(s => `<li class="list-
+
+group-item">${new Date(s.date).toLocaleDateString()} - ${getProductName(s.productId)} 
+
+${s.gramsSold}qr = ${s.totalPrice} AZN ${s.isDebt ? (s.paid ? '✅ Ödənilib' : `🔴 Nisyə 
+
+(${s.customerName || '?'}, öd: ${s.dueDate})`) : ''}</li>`).join('') + `</ul>`;
+    }
+
+    function renderIncomeLog() {
+        let inc = getIncomes().slice(-10).reverse();
+        let div = document.getElementById('incomeLogList');
+        if(!inc.length){ div.innerHTML='<p>Mədaxil yoxdur</p>'; return; }
+        div.innerHTML = `<ul class="list-group">` + inc.map(i => `<li class="list-group-
+
+item">${new Date(i.date).toLocaleString()} - ${getProductName(i.productId)} +
+
+${i.gramsAdded} qr, xərc: ${i.cost} AZN</li>`).join('') + `</ul>`;
+    }
+
+    function renderDebts() {
+        let sales = getSales().filter(s => s.isDebt && !s.paid);
+        let container = document.getElementById('debtsList');
+        if(!sales.length){ container.innerHTML='<div class="alert alert-info">Nisyə satış 
+
+yoxdur.</div>'; return; }
+        // Cədvəl üfüqi sürüşdürmə üçün wrapper içində
+        let tableHtml = `<table class="table table-dark table-
+
+striped"><thead><tr><th>Tarix</th><th>Müştəri</th><th>Telefon</th><th>Məhsul</th><th>Məbləğ<
+
+/th><th>Ödəniş tarixi</th><th></th></thead><tbody>`;
+        sales.forEach(s => {
+            tableHtml += `<tr>
+                <td>${new Date(s.date).toLocaleDateString()}</td>
+                <td>${escapeHtml(s.customerName || '—')}</td>
+                <td>${escapeHtml(s.customerPhone || '—')}</td>
+                <td>${getProductName(s.productId)} (${s.gramsSold} qr)</td>
+                <td>${s.totalPrice} AZN</td>
+                <td>${s.dueDate}</td>
+                <td><button class="btn btn-sm btn-primary-custom" onclick="markDebtPaid
+
+(${s.id})">Ödəniş alındı</button></td>
+            </tr>`;
+        });
+        tableHtml += `</tbody></tr>`;
+        container.innerHTML = tableHtml;
+    }
+    window.markDebtPaid = (saleId) => {
+        let sales = getSales();
+        let sale = sales.find(s => s.id === saleId);
+        if(sale){ sale.paid = true; sale.isDebt = false; saveSales(sales); syncStock(); 
+
+renderDebts(); renderRecentSales(); renderProducts(); updateDailyNav(); 
+
+updateReportsIfActive(); showMessage('Ödəniş qeydə alındı','success'); }
+    };
+
+    // Satış mexanizmi
+    let pendingSale = null;
+    async function prepareSale() {
+        let pid = Number(document.getElementById('sellProductSelect').value);
+        let grams = parseInt(document.getElementById('sellGrams').value);
+        let isDebt = document.getElementById('isDebtCheckbox').checked;
+        let dueDate = isDebt ? document.getElementById('debtDueDate').value : null;
+        if(isDebt && !dueDate) { showMessage('Nisyə üçün ödəniş tarixi seçin','danger'); 
+
+return; }
+        let products = getProducts();
+        let prod = products.find(p => p.id === pid);
+        if(!prod) { showMessage('Məhsul tapılmadı. Səhifəni yeniləyin.','danger'); return; }
+        if(prod.stockGrams < grams) { showMessage(`Stokda kifayət qram yox! 
+
+(${prod.stockGrams} qr mövcud)`,'danger'); return; }
+        let totalPrice = grams * prod.pricePerGram;
+        if(isDebt) {
+            document.getElementById('customerFullName').value = '';
+            document.getElementById('customerPhone').value = '';
+            document.getElementById('modalDueDate').value = dueDate;
+            pendingSale = { productId: pid, gramsSold: grams, totalPrice, dueDate };
+            new bootstrap.Modal(document.getElementById('customerInfoModal')).show();
+        } else {
+            let productsList = getProducts();
+            let targetProd = productsList.find(p => p.id === pid);
+            targetProd.stockGrams -= grams;
+            saveProducts(productsList);
+            let newSale = { id: generateId(), productId: pid, gramsSold: grams, totalPrice, 
+
+date: new Date().toISOString(), isDebt: false, paid: true, dueDate: null, customerName: 
+
+null, customerPhone: null };
+            let sales = getSales(); sales.push(newSale); saveSales(sales);
+            showMessage(`Satış uğurlu! ${grams} qr, ${totalPrice} AZN`,'success');
+            renderProducts(); populateSelects(); renderRecentSales(); renderDebts(); 
+
+updateDailyNav(); updateReportsIfActive();
+        }
+    }
+
+    document.getElementById('confirmDebtSaleBtn').addEventListener('click', () => {
+        if(!pendingSale) return;
+        let fullName = document.getElementById('customerFullName').value.trim();
+        let phone = document.getElementById('customerPhone').value.trim();
+        let dueDate = document.getElementById('modalDueDate').value;
+        if(!fullName || !phone || !dueDate) { alert('Müştəri adı, telefon və ödəniş tarixi 
+
+mütləqdir!'); return; }
+        let productsList = getProducts();
+        let targetProd = productsList.find(p => p.id === pendingSale.productId);
+        if(!targetProd || targetProd.stockGrams < pendingSale.gramsSold) { alert('Stok 
+
+dəyişib, yenidən cəhd edin.'); bootstrap.Modal.getInstance(document.getElementById
+
+('customerInfoModal')).hide(); pendingSale = null; return; }
+        targetProd.stockGrams -= pendingSale.gramsSold;
+        saveProducts(productsList);
+        let newSale = { id: generateId(), productId: pendingSale.productId, gramsSold: 
+
+pendingSale.gramsSold, totalPrice: pendingSale.totalPrice, date: new Date().toISOString(), 
+
+isDebt: true, paid: false, dueDate, customerName: fullName, customerPhone: phone };
+        let sales = getSales(); sales.push(newSale); saveSales(sales);
+        bootstrap.Modal.getInstance(document.getElementById('customerInfoModal')).hide();
+        showMessage(`Nisyə satış qeydə alındı. ${pendingSale.gramsSold} qr, 
+
+${pendingSale.totalPrice} AZN. Müştəri: ${fullName}`,'success');
+        pendingSale = null;
+        renderProducts(); populateSelects(); renderRecentSales(); renderDebts(); 
+
+updateDailyNav(); updateReportsIfActive();
+    });
+
+    function addStockWithCost() {
+        let pid = Number(document.getElementById('incomeProductSelect').value);
+        let grams = parseInt(document.getElementById('incomeGrams').value);
+        let cost = parseFloat(document.getElementById('incomeCost').value);
+        if(isNaN(grams) || grams<=0) { showMessage('Qram düzgün 
+
+deyil','danger','incomeMessage'); return; }
+        if(isNaN(cost) || cost<0) cost=0;
+        let incomes = getIncomes();
+        incomes.push({ id: generateId(), productId: pid, gramsAdded: grams, cost, date: new 
+
+Date().toISOString() });
+        saveIncomes(incomes);
+        let prods = getProducts(); let prod = prods.find(p => p.id === pid); if(prod) 
+
+prod.stockGrams += grams; saveProducts(prods);
+        showMessage(`${grams} qr əlavə edildi, xərc ${cost} AZN`,'success','incomeMessage');
+        renderProducts(); populateSelects(); renderIncomeLog(); updateReportsIfActive();
+    }
+
+    function getPeriodDates(period) {
+        let now = new Date();
+        if(period === 'day') return new Date(now.getFullYear(), now.getMonth(), 
+
+now.getDate());
+        if(period === 'week') { let d = new Date(now); d.setDate(now.getDate()-7); return 
+
+d; }
+        let d = new Date(now); d.setDate(now.getDate()-30); return d;
+    }
+    function updateReports() {
+        let period = document.getElementById('reportPeriod').value;
+        let start = getPeriodDates(period);
+        let sales = getSales().filter(s => !s.isDebt || s.paid);
+        let filteredSales = sales.filter(s => new Date(s.date) >= start);
+        let totalIncome = filteredSales.reduce((s,item)=>s+item.totalPrice,0);
+        let expenses = getIncomes().filter(inc => new Date(inc.date) >= start).reduce
+
+((s,inc)=>s+(inc.cost||0),0);
+        let netProfit = totalIncome - expenses;
+        document.getElementById('totalIncomeReport').innerText = totalIncome.toFixed(2);
+        document.getElementById('totalExpenseReport').innerText = expenses.toFixed(2);
+        document.getElementById('netProfitReport').innerText = netProfit.toFixed(2);
+        let last7Days = []; for(let i=6;i>=0;i--){ let d=new Date(); d.setDate(d.getDate
+
+()-i); d.setHours(0,0,0,0); last7Days.push(d); }
+        let dailyIncome = last7Days.map(day => sales.filter(s=>new Date(s.date)>=day && new 
+
+Date(s.date)<new Date(day.getTime()+86400000)).reduce((sum,s)=>sum+s.totalPrice,0));
+        if(window.myChart) window.myChart.destroy();
+        let ctx = document.getElementById('salesChart').getContext('2d');
+        window.myChart = new Chart(ctx, { type:'bar', data:{ labels:last7Days.map
+
+(d=>d.toLocaleDateString('az')), datasets:[{ label:'Gəlir (AZN)', data:dailyIncome, 
+
+backgroundColor:'#d4af37' }] } });
+        let tableHtml = `<table class="table table-
+
+striped"><thead><tr><th>Tarix</th><th>Məhsul</th><th>Qram</th><th>Məbləğ</th><th>Nisyə</th><
+
+/tr></thead><tbody>${filteredSales.slice(-20).reverse().map(s=>`<tr> <td>${new Date
+
+(s.date).toLocaleDateString()}</td> <td>${getProductName(s.productId)}</span></td> <td>
+
+${s.gramsSold}</span></td> <td>${s.totalPrice}</span></td> <td>${s.isDebt ? 'Bəli
+
+(ödənilib)' : 'Xeyr'}</span></tr>`).join('')}</tbody></table>`;
+        document.getElementById('reportTableContainer').innerHTML = tableHtml;
+    }
+    function updateReportsIfActive() { if(document.getElementById('reports-
+
+tab').classList.contains('active')) updateReports(); }
+    function updateDailyNav() { let todayStart=new Date(); todayStart.setHours(0,0,0,0); 
+
+let paidSales = getSales().filter(s => ( (!s.isDebt) || s.paid) && new Date(s.date) >= 
+
+todayStart); let total = paidSales.reduce((sum,s)=>sum+s.totalPrice,0); 
+
+document.getElementById('dailySaleNav').innerText = total.toFixed(2); }
+    function showMessage(msg,type,elId='sellMessage'){ let el=document.getElementById
+
+(elId); el.innerText=msg; el.classList.remove('d-none','alert-success','alert-danger'); 
+
+el.classList.add(`alert-${type==='success'?'success':'danger'}`); setTimeout(()
+
+=>el.classList.add('d-none'),3000); }
+
+    // Yeni məhsul əlavə et
+    document.getElementById('addProductForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        try {
+            const name = document.getElementById('prodName').value.trim();
+            const price = parseFloat(document.getElementById('prodPriceGram').value);
+            const stock = parseInt(document.getElementById('prodStock').value) || 0;
+            const file = document.getElementById('prodImage').files[0];
+            if(!name || isNaN(price) || price <= 0) { alert('Ad və düzgün qiymət daxil 
+
+edin!'); return; }
+            let imgBase64 = '';
+            if(file) { imgBase64 = await new Promise(resolve => { const reader = new 
+
+FileReader(); reader.onload = () => resolve(reader.result); reader.readAsDataURL(file); }); 
+
+}
+            const newId = generateId();
+            let products = getProducts();
+            products.push({ id: newId, name, pricePerGram: price, stockGrams: stock, 
+
+imageBase64: imgBase64 });
+            saveProducts(products);
+            let incomes = getIncomes();
+            incomes.push({ id: generateId(), productId: newId, gramsAdded: stock, cost: 0, 
+
+date: new Date().toISOString() });
+            saveIncomes(incomes);
+            syncStock();
+            renderProducts(); populateSelects();
+            document.getElementById('addProductForm').reset();
+            bootstrap.Modal.getInstance(document.getElementById('addProductModal')).hide();
+            showMessage(`"${name}" uğurla əlavə edildi`, 'success', 'sellMessage');
+        } catch(err) { alert('Xəta: '+err.message); }
+    });
+
+    // Event listeners
+    document.getElementById('executeSellBtn').addEventListener('click', prepareSale);
+    document.getElementById('addStockBtn').addEventListener('click', addStockWithCost);
+    document.getElementById('reportPeriod').addEventListener('change', updateReports);
+    document.getElementById('isDebtCheckbox').addEventListener('change', (e) => { 
+
+document.getElementById('paymentDateDiv').style.display = e.target.checked ? 'block' : 
+
+'none'; });
+
+    document.querySelectorAll('[data-tab]').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            let id = link.dataset.tab;
+            document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('show', 
+
+'active'));
+            document.getElementById(id).classList.add('show', 'active');
+            document.querySelectorAll('.nav-link').forEach(n => n.classList.remove
+
+('active'));
+            link.classList.add('active');
+            if(id === 'reports-tab') updateReports();
+            if(id === 'sell-tab') { renderRecentSales(); populateSelects(); }
+            if(id === 'income-tab') { renderIncomeLog(); populateSelects(); }
+            if(id === 'debts-tab') renderDebts();
+            if(id === 'products-tab') renderProducts();
+        });
+    });
+
+    initData(); syncStock(); renderProducts(); populateSelects(); renderRecentSales(); 
+
+renderIncomeLog(); updateDailyNav(); updateReports(); checkAlertsOnce();
+</script>
+</body>
+</html>
