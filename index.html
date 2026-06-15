@@ -39,6 +39,15 @@
         footer a { color: #d4af37; text-decoration: none; }
         footer a:hover { text-decoration: underline; }
     </style>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#7a5c00">
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/MEYANPARFUM/service-worker.js');
+        });
+      }
+    </script>
 </head>
 <body>
 
